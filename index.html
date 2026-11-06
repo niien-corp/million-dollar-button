@@ -39,6 +39,13 @@
       .toast { position:fixed; left:50%; top:25%; pointer-events:none; font-size:1.2rem; font-weight:900; color:var(--gold); text-shadow:0 2px 6px #3d125e; animation:float .85s ease-out forwards; }
       @keyframes float { to { transform:translate(-50%,-72px) scale(1.25); opacity:0; } }
       footer { margin-top:26px; color:#aa96cb; text-align:center; font-size:.75rem; }
+      .transactions { width:min(560px, 100%); margin:18px auto 0; color:#d7cbe8; }
+      .transactions table { width:100%; border-collapse:collapse; font-size:.8rem; }
+      .transactions th { padding:9px 12px; color:#9987b6; font-size:.67rem; letter-spacing:.09em; text-align:left; text-transform:uppercase; }
+      .transactions td { padding:10px 12px; background:#101010; }
+      .transactions td:first-child { border-radius:8px 0 0 8px; }
+      .transactions td:last-child { border-radius:0 8px 8px 0; color:var(--gold); font-weight:800; text-align:right; }
+      .transactions .empty td { color:#817294; text-align:center; }
       @media (max-width:700px) { nav { margin-bottom:44px; } .tag{display:none} .game{grid-template-columns:1fr; margin-top:40px} .button-card{min-height:350px} }
     </style>
   </head>
@@ -47,7 +54,7 @@
       <nav><div class="brand"><b>$</b> Million Dollar Button</div><div class="tag">100% imaginary. 0% taxable.</div></nav>
       <section class="hero">
         <div class="eyebrow">Financial freedom, allegedly</div>
-        <h1>One button.<br><em>Infinite</em> pretend wealth.</h1>
+        <h1>One button.<br><em>Infinite</em> wealth.</h1>
         <p class="sub">Click your way to a fictional fortune, then invest it in increasingly questionable upgrades. Your accountant will never know.</p>
       </section>
       <section class="game" aria-label="Million Dollar Button game">
@@ -67,15 +74,23 @@
         </aside>
       </section>
       <footer>Not investment advice. Not even close.</footer>
+      <section class="transactions" aria-label="Transaction history">
+        <table>
+          <thead><tr><th>Message</th><th>Amount</th></tr></thead>
+          <tbody id="transactions"><tr class="empty"><td colspan="2">No transactions yet.</td></tr></tbody>
+        </table>
+      </section>
     </main>
     <script>
-      const state = JSON.parse(localStorage.getItem('million-dollar-button') || '{"money":0,"power":0,"clicks":0,"version":2}');
-      if (state.version !== 2) { state.power = Math.max(0, (Number(state.power) || 0) - 1); state.version = 2; }
-      const money = document.querySelector('#money'), perClick = document.querySelector('#perClick'), clicks = document.querySelector('#clicks');
+      const state = JSON.parse(localStorage.getItem('million-dollar-button') || '{"money":0,"power":0,"clicks":0,"transactions":[],"version":3}');
+      if (!state.version || state.version < 2) state.power = Math.max(0, (Number(state.power) || 0) - 1);
+      state.version = 3;
+      if (!Array.isArray(state.transactions)) state.transactions = [];
+      const money = document.querySelector('#money'), perClick = document.querySelector('#perClick'), clicks = document.querySelector('#clicks'), transactions = document.querySelector('#transactions');
       const fmt = n => '$' + Math.floor(n).toLocaleString();
-      function payout() { const roll = Math.random() * 100; return roll < 55 ? 1 : roll < 80 ? 2 : roll < 92 ? 3 : roll < 98 ? 4 : 5; }
-      function render() { money.textContent = fmt(state.money); perClick.textContent = state.power ? 'Earn $1–$5 + ' + fmt(state.power) + ' per click' : 'Earn $1–$5 per click'; clicks.textContent = state.clicks.toLocaleString() + ' perfectly legal clicks'; document.querySelectorAll('.upgrade').forEach(b => b.disabled = state.money < +b.dataset.cost); localStorage.setItem('million-dollar-button', JSON.stringify(state)); }
-      document.querySelector('#earn').addEventListener('click', e => { const earned = payout() + state.power; state.money += earned; state.clicks++; const t = document.createElement('div'); t.className='toast'; t.textContent='+' + fmt(earned); t.style.left=e.clientX+'px'; t.style.top=e.clientY+'px'; document.body.append(t); t.addEventListener('animationend',()=>t.remove()); render(); });
+      function payout() { const roll = Math.random() * 100; return roll < 55 ? 1 : roll < 80 ? 2 : roll < 92 ? 3 : roll < 97 ? 4 : roll < 99 ? 5 : 10; }
+      function render() { money.textContent = fmt(state.money); perClick.textContent = state.power ? 'Earn $1–$10 + ' + fmt(state.power) + ' per click' : 'Earn $1–$10 per click'; clicks.textContent = state.clicks.toLocaleString() + ' perfectly legal clicks'; transactions.innerHTML = state.transactions.length ? state.transactions.map(t => '<tr><td>' + t.message + '</td><td>' + fmt(t.amount) + '</td></tr>').join('') : '<tr class="empty"><td colspan="2">No transactions yet.</td></tr>'; document.querySelectorAll('.upgrade').forEach(b => b.disabled = state.money < +b.dataset.cost); localStorage.setItem('million-dollar-button', JSON.stringify(state)); }
+      document.querySelector('#earn').addEventListener('click', e => { const earned = payout() + state.power; state.money += earned; state.clicks++; state.transactions.unshift({ message: 'Button payout', amount: earned }); const t = document.createElement('div'); t.className='toast'; t.textContent='+' + fmt(earned); t.style.left=e.clientX+'px'; t.style.top=e.clientY+'px'; document.body.append(t); t.addEventListener('animationend',()=>t.remove()); render(); });
       document.querySelectorAll('.upgrade').forEach(b => b.addEventListener('click', () => { if (state.money >= +b.dataset.cost) { state.money -= +b.dataset.cost; state.power += +b.dataset.power; b.remove(); render(); }}));
       render();
     </script>
