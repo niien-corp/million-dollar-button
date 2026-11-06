@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Million Dollar Button</title>
+    <style>
+      :root { color-scheme: dark; --ink:#f8f0ff; --violet:#7f39ff; --pink:#ff4db8; --gold:#ffd86b; --panel:rgba(27,17,58,.82); }
+      * { box-sizing:border-box; }
+      body { margin:0; min-height:100vh; overflow-x:hidden; font-family:Inter, ui-rounded, "Avenir Next", system-ui, sans-serif; color:var(--ink); background:#120b27; }
+      body::before, body::after { content:""; position:fixed; z-index:-1; border-radius:50%; filter:blur(8px); opacity:.65; }
+      body::before { width:47vw; height:47vw; min-width:420px; min-height:420px; background:#4f1f9e; left:-16vw; top:-19vw; }
+      body::after { width:43vw; height:43vw; min-width:380px; min-height:380px; background:#8a174c; right:-15vw; bottom:-18vw; }
+      main { width:min(1040px, calc(100% - 32px)); margin:auto; padding:32px 0 52px; }
+      nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:60px; font-weight:800; letter-spacing:-.04em; }
+      .brand { display:flex; gap:10px; align-items:center; font-size:1.1rem; }
+      .brand b { display:grid; place-items:center; height:31px; width:31px; color:#1b0d38; border-radius:9px; background:var(--gold); font-family:Georgia,serif; font-size:1.35rem; }
+      .tag { color:#cfc3ec; font-size:.8rem; letter-spacing:.02em; }
+      .hero { text-align:center; }
+      .eyebrow { display:inline-block; margin:0 0 13px; padding:7px 12px; border:1px solid #71519c; border-radius:100px; color:#e2d5fc; background:#29194b; font-size:.76rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+      h1 { max-width:850px; margin:0 auto; font-size:clamp(3rem, 9vw, 6.7rem); line-height:.88; letter-spacing:-.08em; }
+      h1 em { color:var(--gold); font-family:Georgia,serif; font-weight:400; letter-spacing:-.1em; }
+      .sub { max-width:550px; margin:25px auto 0; color:#d6c9e8; font-size:1.1rem; line-height:1.55; }
+      .game { display:grid; grid-template-columns:1.2fr .8fr; gap:17px; margin:53px auto 0; text-align:left; }
+      .card { border:1px solid rgba(221,199,255,.18); border-radius:25px; background:var(--panel); box-shadow:0 18px 65px rgba(0,0,0,.2); backdrop-filter:blur(15px); }
+      .button-card { min-height:390px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px; position:relative; overflow:hidden; }
+      .money { font-size:clamp(2.8rem,7vw,5.2rem); font-weight:900; letter-spacing:-.07em; color:#fff8d7; text-shadow:0 3px 0 #6e4b00,0 0 25px rgba(255,216,107,.34); }
+      .per-click { margin:4px 0 30px; color:#c9b7e9; font-size:.9rem; }
+      #earn { position:relative; width:min(245px, 75vw); aspect-ratio:1; border:0; border-radius:50%; cursor:pointer; color:white; background:radial-gradient(circle at 33% 27%, #ff87d0, #ed258e 47%, #a80c64); box-shadow:0 12px 0 #67013e, 0 23px 35px rgba(0,0,0,.42), inset 0 5px 12px rgba(255,255,255,.35); font:900 clamp(1.45rem, 4vw, 2rem)/1 Inter, sans-serif; letter-spacing:-.05em; transition:transform .08s, box-shadow .08s; }
+      #earn:hover { transform:translateY(-3px); box-shadow:0 15px 0 #67013e,0 28px 45px rgba(0,0,0,.43),inset 0 5px 12px rgba(255,255,255,.35); }
+      #earn:active { transform:translateY(9px); box-shadow:0 3px 0 #67013e,0 10px 18px rgba(0,0,0,.35),inset 0 5px 12px rgba(255,255,255,.35); }
+      .clicks { margin-top:26px; color:#b9a5dc; font-size:.84rem; }
+      .upgrades { padding:23px; }
+      .upgrades h2 { margin:0 0 4px; font-size:1.24rem; letter-spacing:-.04em; }
+      .upgrades p { margin:0 0 16px; color:#b9a8d7; font-size:.83rem; line-height:1.4; }
+      .upgrade { width:100%; margin:8px 0; padding:13px; text-align:left; border:1px solid rgba(221,199,255,.16); border-radius:14px; color:var(--ink); background:#211442; cursor:pointer; transition:.15s; }
+      .upgrade:not(:disabled):hover { border-color:#d68cff; transform:translateX(3px); background:#2b1755; }
+      .upgrade:disabled { cursor:default; opacity:.48; }
+      .upgrade strong { display:block; font-size:.9rem; }
+      .upgrade span { display:block; margin-top:3px; color:#c4b3df; font-size:.75rem; }
+      .upgrade .cost { color:var(--gold); }
+      .toast { position:fixed; left:50%; top:25%; pointer-events:none; font-size:1.2rem; font-weight:900; color:var(--gold); text-shadow:0 2px 6px #3d125e; animation:float .85s ease-out forwards; }
+      @keyframes float { to { transform:translate(-50%,-72px) scale(1.25); opacity:0; } }
+      footer { margin-top:26px; color:#aa96cb; text-align:center; font-size:.75rem; }
+      @media (max-width:700px) { nav { margin-bottom:44px; } .tag{display:none} .game{grid-template-columns:1fr; margin-top:40px} .button-card{min-height:350px} }
+    </style>
+  </head>
+  <body>
+    <main>
+      <nav><div class="brand"><b>$</b> Million Dollar Button</div><div class="tag">100% imaginary. 0% taxable.</div></nav>
+      <section class="hero">
+        <div class="eyebrow">Financial freedom, allegedly</div>
+        <h1>One button.<br><em>Infinite</em> pretend wealth.</h1>
+        <p class="sub">Click your way to a fictional fortune, then invest it in increasingly questionable upgrades. Your accountant will never know.</p>
+      </section>
+      <section class="game" aria-label="Million Dollar Button game">
+        <div class="card button-card">
+          <div class="money" id="money">$0</div>
+          <div class="per-click" id="perClick">+$1 per click</div>
+          <button id="earn" type="button" aria-label="Earn imaginary money">MAKE<br>MONEY</button>
+          <div class="clicks" id="clicks">0 perfectly legal clicks</div>
+        </div>
+        <aside class="card upgrades">
+          <h2>Absurd upgrades</h2>
+          <p>Spend imaginary money to make even more imaginary money.</p>
+          <button class="upgrade" data-cost="25" data-power="2"><strong>Golden Index Finger</strong><span>+ $2 per click · <i class="cost">$25</i></span></button>
+          <button class="upgrade" data-cost="150" data-power="10"><strong>Executive Hamster</strong><span>+ $10 per click · <i class="cost">$150</i></span></button>
+          <button class="upgrade" data-cost="900" data-power="60"><strong>Private Moon Office</strong><span>+ $60 per click · <i class="cost">$900</i></span></button>
+          <button class="upgrade" data-cost="5000" data-power="400"><strong>Algorithmic Yacht</strong><span>+ $400 per click · <i class="cost">$5,000</i></span></button>
+        </aside>
+      </section>
+      <footer>Not investment advice. Not even close.</footer>
+    </main>
+    <script>
+      const state = JSON.parse(localStorage.getItem('million-dollar-button') || '{"money":0,"power":1,"clicks":0}');
+      const money = document.querySelector('#money'), perClick = document.querySelector('#perClick'), clicks = document.querySelector('#clicks');
+      const fmt = n => '$' + Math.floor(n).toLocaleString();
+      function render() { money.textContent = fmt(state.money); perClick.textContent = '+' + fmt(state.power) + ' per click'; clicks.textContent = state.clicks.toLocaleString() + ' perfectly legal clicks'; document.querySelectorAll('.upgrade').forEach(b => b.disabled = state.money < +b.dataset.cost); localStorage.setItem('million-dollar-button', JSON.stringify(state)); }
+      document.querySelector('#earn').addEventListener('click', e => { state.money += state.power; state.clicks++; const t = document.createElement('div'); t.className='toast'; t.textContent='+' + fmt(state.power); t.style.left=e.clientX+'px'; t.style.top=e.clientY+'px'; document.body.append(t); t.addEventListener('animationend',()=>t.remove()); render(); });
+      document.querySelectorAll('.upgrade').forEach(b => b.addEventListener('click', () => { if (state.money >= +b.dataset.cost) { state.money -= +b.dataset.cost; state.power += +b.dataset.power; b.remove(); render(); }}));
+      render();
+    </script>
+  </body>
+</html>
